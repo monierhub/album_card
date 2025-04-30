@@ -1,4 +1,5 @@
 module.exports = {
+  mode: "jit",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -16,7 +17,7 @@ module.exports = {
         "album-count": "#DADADA",
       },
       animation: {
-        "ablum-transform": "transform 0.9s",
+        "album-transform": "transform 0.9s",
       },
       borderColor: {
         "navbar-color": "#DADADA",
