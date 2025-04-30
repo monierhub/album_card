@@ -31,19 +31,12 @@ export default async function handler(
       const albumData: AlbumInput = req.body;
 
       // Validate required fields
-      if (
-        !albumData.userId ||
-        !albumData.id ||
-        !albumData.title ||
-        !albumData.image
-      ) {
+      if (!albumData.title || !albumData.image) {
         return res.status(400).json({ error: "Missing required fields" });
       }
 
       const result = await db.collection<Album>("albums").updateOne(
-        {
-          $or: [{ _id: new ObjectId(id) }, { id: id }],
-        },
+        { id: id },
         {
           $set: {
             ...albumData,
@@ -58,9 +51,7 @@ export default async function handler(
 
       return res.status(200).json({ message: "Album updated successfully" });
     } else if (req.method === "DELETE") {
-      const result = await db.collection<Album>("albums").deleteOne({
-        $or: [{ _id: new ObjectId(id) }, { id: id }],
-      });
+      const result = await db.collection<Album>("albums").deleteOne({ id: id });
 
       if (result.deletedCount === 0) {
         return res.status(404).json({ error: "Album not found" });
@@ -78,10 +69,8 @@ export default async function handler(
       `Error handling ${req.method || "unknown"} request for album:`,
       error
     );
-    return res
-      .status(500)
-      .json({
-        error: `Failed to ${req.method?.toLowerCase() || "process"} album`,
-      });
+    return res.status(500).json({
+      error: `Failed to ${req.method?.toLowerCase() || "process"} album`,
+    });
   }
 }
