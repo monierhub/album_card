@@ -11,7 +11,11 @@ export default async function handler(
 
   if (req.method === "GET") {
     try {
-      const albums = await db.collection<Album>("albums").find({}).toArray();
+      const albums = await db
+        .collection<Album>("albums")
+        .find({})
+        .sort({ updatedAt: -1 })
+        .toArray();
       return res.status(200).json(albums);
     } catch (error) {
       console.error("Error fetching albums:", error);
