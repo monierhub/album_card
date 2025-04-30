@@ -20,7 +20,7 @@ function Form(props: FormProps) {
 
   useEffect(() => {
     if (update) setName(update.title);
-  }, []);
+  }, [update, setName]);
 
   return (
     <div className={style.box}>
