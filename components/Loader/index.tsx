@@ -6,9 +6,17 @@ const override: CSSProperties = {
   border: "9px solid rgb(7, 160, 129)",
 };
 
+const styleset = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "100vh",
+  width: "100vw",
+};
+
 function Loader() {
   return (
-    <div className="flex items-center justify-center h-screen w-screen">
+    <div className="sweet" style={styleset}>
       <div>
         <ClipLoader
           loading={true}
