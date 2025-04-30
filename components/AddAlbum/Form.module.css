@@ -38,6 +38,55 @@
 .left input:hover {
   box-shadow: inset 0 0 5px rgb(7, 160, 129);
 }
+
+/* Image upload styles */
+.imageUpload {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.imagePreview {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.previewImage {
+  object-fit: cover;
+}
+
+.fileInput {
+  display: none;
+}
+
+.uploadButton {
+  background-color: #dadada;
+  color: #222;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.uploadButton:hover {
+  background-color: #c0c0c0;
+  box-shadow: 1px 1px 1.5px 0.5px grey;
+}
+
+.uploadButton:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
 /* for right section for the form */
 .right {
   display: flex;
@@ -133,6 +182,10 @@
   .right {
     margin-top: 10px;
   }
+  .imagePreview {
+    width: 150px;
+    height: 150px;
+  }
 }
 
 @media screen and (max-width: 511px) {
@@ -147,5 +200,9 @@
   }
   .right {
     margin-top: 10px;
+  }
+  .imagePreview {
+    width: 120px;
+    height: 120px;
   }
 }
