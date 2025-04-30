@@ -3,7 +3,7 @@ import { MdOutlineModeEditOutline } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 import { Album } from "@/types";
-import style from "./AlbumList.module.css";
+import style from "./AlbumGallery.module.css";
 
 interface AlbumGalleryProps {
   albums: Album[];
