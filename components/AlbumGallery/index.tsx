@@ -5,8 +5,9 @@ import { useInView } from "react-intersection-observer";
 import { useState, useEffect } from "react";
 
 import { Album } from "@/types";
-import style from "./AlbumGallery.module.css";
 import Loader from "@/components/Loader";
+//imported css for the Album Gallery.
+import style from "./AlbumGallery.module.css";
 
 interface AlbumGalleryProps {
   albums: Album[];

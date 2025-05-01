@@ -3,6 +3,7 @@ import { IoNotifications } from "react-icons/io5";
 import { PiGooglePhotosLogoFill } from "react-icons/pi";
 
 import { Album } from "@/types";
+//imported css for the Navbar
 import style from "./Navbar.module.css";
 
 interface NavbarProps {

@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
 
+import { Album } from "@/types";
 //imported css for the Form.
 import style from "./Form.module.css";
-import { Album } from "@/types";
 
 interface FormProps {
   name: string;
