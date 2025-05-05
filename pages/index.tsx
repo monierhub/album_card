@@ -101,7 +101,6 @@ export default function Home() {
 
   return (
     <>
-      0x5ddbaca4ae2117a79fc98cafb09c5d57739e1908
       <Navbar
         length={albums.length}
         handleSearch={handleSearch}
