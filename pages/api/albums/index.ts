@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/mongodb";
 import { Album, AlbumInput } from "@/lib/models/Album";
+import { handleError } from "@/lib/utils/error";
+import { validateAlbum } from "@/lib/utils/validation";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,31 +11,19 @@ export default async function handler(
   const client = await clientPromise;
   const db = client.db("album_db");
 
-  if (req.method === "GET") {
-    try {
+  try {
+    if (req.method === "GET") {
       const albums = await db
         .collection<Album>("albums")
         .find({})
         .sort({ updatedAt: -1 })
         .toArray();
       return res.status(200).json(albums);
-    } catch (error) {
-      console.error("Error fetching albums:", error);
-      return res.status(500).json({ error: "Failed to fetch albums" });
-    }
-  } else if (req.method === "POST") {
-    try {
+    } else if (req.method === "POST") {
       const albumData: AlbumInput = req.body;
 
-      // Validate required fields
-      if (
-        !albumData.userId ||
-        !albumData.id ||
-        !albumData.title ||
-        !albumData.image
-      ) {
-        return res.status(400).json({ error: "Missing required fields" });
-      }
+      // Validate the album data
+      validateAlbum(albumData);
 
       const result = await db.collection<Album>("albums").insertOne({
         ...albumData,
@@ -45,12 +35,12 @@ export default async function handler(
         message: "Album created successfully",
         albumId: result.insertedId,
       });
-    } catch (error) {
-      console.error("Error creating album:", error);
-      return res.status(500).json({ error: "Failed to create album" });
+    } else {
+      res.setHeader("Allow", ["GET", "POST"]);
+      return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
-  } else {
-    res.setHeader("Allow", ["GET", "POST"]);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  } catch (error) {
+    const { statusCode, message } = handleError(error);
+    return res.status(statusCode).json({ error: message });
   }
 }

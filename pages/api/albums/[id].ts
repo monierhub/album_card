@@ -1,7 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
 import clientPromise from "@/lib/mongodb";
-import { Album, AlbumInput } from "@/lib/models/Album";
+import { Album } from "@/lib/models/Album";
+import { handleError } from "@/lib/utils/error";
+import { validateAlbumUpdate } from "@/lib/utils/validation";
+import { NotFoundError } from "@/lib/utils/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,17 +26,15 @@ export default async function handler(
       });
 
       if (!album) {
-        return res.status(404).json({ error: "Album not found" });
+        throw new NotFoundError("Album not found");
       }
 
       return res.status(200).json(album);
     } else if (req.method === "PUT") {
-      const albumData: AlbumInput = req.body;
+      const albumData = req.body;
 
-      // Validate required fields
-      if (!albumData.title || !albumData.image) {
-        return res.status(400).json({ error: "Missing required fields" });
-      }
+      // Validate the update data
+      validateAlbumUpdate.parse(albumData);
 
       const result = await db.collection<Album>("albums").updateOne(
         { id: id },
@@ -46,7 +47,7 @@ export default async function handler(
       );
 
       if (result.matchedCount === 0) {
-        return res.status(404).json({ error: "Album not found" });
+        throw new NotFoundError("Album not found");
       }
 
       return res.status(200).json({ message: "Album updated successfully" });
@@ -54,23 +55,16 @@ export default async function handler(
       const result = await db.collection<Album>("albums").deleteOne({ id: id });
 
       if (result.deletedCount === 0) {
-        return res.status(404).json({ error: "Album not found" });
+        throw new NotFoundError("Album not found");
       }
 
       return res.status(200).json({ message: "Album deleted successfully" });
     } else {
       res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
-      return res
-        .status(405)
-        .end(`Method ${req.method || "unknown"} Not Allowed`);
+      return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (error) {
-    console.error(
-      `Error handling ${req.method || "unknown"} request for album:`,
-      error
-    );
-    return res.status(500).json({
-      error: `Failed to ${req.method?.toLowerCase() || "process"} album`,
-    });
+    const { statusCode, message } = handleError(error);
+    return res.status(statusCode).json({ error: message });
   }
 }
